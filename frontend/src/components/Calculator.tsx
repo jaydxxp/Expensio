@@ -1,95 +1,255 @@
-import { useEffect, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import axios from "axios";
 
-interface CalculatorWidgetProps {
+interface Expense {
+  title: string;
+  category: string;
+  date: string;
+  amount: number;
+  recurring: boolean;
+}
+
+interface Props {
   isOpen: boolean;
 }
 
-const CalculatorWidget: React.FC<CalculatorWidgetProps> = ({ isOpen }) => {
-  const [input, setInput] = useState<string>("");
-  const [result, setResult] = useState<string>("");
+interface Message {
+  type: "user" | "ai";
+  text: string;
+}
 
-  const formatExpression = (expr: string): string =>
-    expr.replace(/÷/g, "/").replace(/×/g, "*").replace(/%/g, "/100");
+export default function AIExpenseAssistant({ isOpen }: Props) {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [fetchingExpenses, setFetchingExpenses] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(() => {
-    if (!input.trim()) {
-      setResult("");
-      return;
+    if (isOpen && expenses.length === 0) {
+      fetchExpenses();
     }
+  }, [isOpen]);
+  
+  const Backendurl = import.meta.env.VITE_BACKEND_URL;
+  
+  const fetchExpenses = async () => {
     try {
-      const evalResult = eval(formatExpression(input));
-      if (!isNaN(evalResult)) setResult(evalResult.toString());
-    } catch {
-      setResult("");
-    }
-  }, [input]);
+      setFetchingExpenses(true);
+      const token = localStorage.getItem("token");
 
-  const handleClick = (value: string) => {
-    if (value === "C") {
-      setInput("");
-      setResult("");
-    } else if (value === "⌫") {
-      setInput((prev) => prev.slice(0, -1));
-    } else if (value === "=") {
-      try {
-        const evalResult = eval(formatExpression(input));
-        setInput(evalResult.toString());
-        setResult("");
-      } catch {
-        setInput("Error");
-        setResult("");
+      const response = await axios.get(
+        `${Backendurl}/api/v1/expense/allexpense`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.allExpense) {
+        setExpenses(response.data.allExpense);
       }
-    } else {
-      setInput((prev) => prev + value);
+    } catch (error) {
+      console.error("Error fetching expenses:", error);
+      const errorMessage: Message = {
+        type: "ai",
+        text: "Sorry, I couldn't load your expenses. Please try again later.",
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setFetchingExpenses(false);
+    }
+  };
+  
+  const callAI = async (userQuery: string, expenseData: Expense[]) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post(
+        `${Backendurl}/api/v1/expense/ai/query`,
+        {
+          query: userQuery,
+          expenses: expenseData,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data.success) {
+        return response.data.response;
+      } else {
+        throw new Error(response.data.message || "AI request failed");
+      }
+    } catch (error) {
+      console.error("AI Error:", error);
+      throw error;
     }
   };
 
-  const buttons = [
-    ["C", "⌫", "%", "÷"],
-    ["7", "8", "9", "×"],
-    ["4", "5", "6", "-"],
-    ["1", "2", "3", "+"],
-    ["0", "00", ".", "="],
-  ];
+  const handleSend = async () => {
+    if (!query.trim()) return;
+
+    const userMessage: Message = { type: "user", text: query };
+    setMessages((prev) => [...prev, userMessage]);
+    setQuery("");
+    setLoading(true);
+
+    try {
+      const aiResponse = await callAI(query, expenses);
+      const aiMessage: Message = { type: "ai", text: aiResponse };
+      setMessages((prev) => [...prev, aiMessage]);
+    } catch (error) {
+      const aiMessage: Message = {
+        type: "ai",
+        text: "Sorry, I couldn't process your request. Please try again.",
+      };
+      setMessages((prev) => [...prev, aiMessage]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed bottom-20 right-5 flex flex-col items-end z-50">
-      <div className="mb-3 w-64 rounded-lg bg-[#171717] border border-[#282828] p-4 shadow-xl transition-all duration-300">
-        <div className="flex flex-col mb-3">
-          <input
-            type="text"
-            value={input}
-            readOnly
-            className="w-full text-right bg-transparent text-white border border-[#282828] rounded p-2 text-lg focus:outline-none"
-          />
-          {result && (
-            <div className="text-right text-gray-400 text-sm mt-1">
-              = {result}
+      <div className="w-[calc(100vw-2.5rem)] max-w-sm sm:w-80 h-[400px] sm:h-[500px] rounded-lg bg-[#171717] border border-[#282828] shadow-xl transition-all duration-300 flex flex-col">
+        <div className="px-3 py-2 border-b border-[#282828]">
+          <h2 className="text-base sm:text-lg font-semibold text-white">
+            Expense Assistant
+          </h2>
+          <p className="text-[10px] sm:text-xs text-gray-400">
+            {fetchingExpenses
+              ? "Loading your expenses..."
+              : expenses.length > 0
+              ? `Analyzing ${expenses.length} expenses`
+              : "No expenses found"}
+          </p>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+          {messages.length === 0 && !fetchingExpenses && (
+            <div className="text-center text-gray-500 text-xs sm:text-sm mt-8">
+              <p>👋 Hi! I'm your expense assistant.</p>
+              <p className="mt-2">Ask me anything about your expenses!</p>
             </div>
           )}
-        </div>
-        <div className="grid grid-cols-4 gap-2">
-          {buttons.flat().map((btn) => (
-            <button
-              key={btn}
-              onClick={() => handleClick(btn)}
-              className={`py-2 rounded text-lg transition ${
-                ["÷", "×", "-", "+", "="].includes(btn)
-                  ? "bg-[#282828] hover:bg-[#333333] text-white"
-                  : btn === "C"
-                  ? "bg-[#2a2a2a] hover:bg-[#333333] text-red-400"
-                  : "bg-[#1e1e1e] hover:bg-[#282828] text-white"
+
+          {fetchingExpenses && (
+            <div className="flex justify-center items-center h-full">
+              <div className="text-gray-400 text-xs sm:text-sm">Loading expenses...</div>
+            </div>
+          )}
+
+          {messages.map((msg, idx) => (
+            <div
+              key={idx}
+              className={`flex ${
+                msg.type === "user" ? "justify-end" : "justify-start"
               }`}
             >
-              {btn}
-            </button>
+              <div
+                className={`rounded-lg px-2.5 py-1.5 max-w-[85%] break-words text-xs sm:text-sm ${
+                  msg.type === "user"
+                    ? "bg-[#26e07f] text-black"
+                    : "bg-[#1e1e1e] text-white border border-[#282828]"
+                }`}
+              >
+                {msg.type === "ai" ? (
+                  <div className="prose prose-invert prose-sm max-w-none [&>*]:break-words [&>*]:text-xs sm:[&>*]:text-sm [&>h1]:text-sm [&>h2]:text-xs [&>h3]:text-xs [&>p]:text-xs sm:[&>p]:text-sm [&>ul]:text-xs sm:[&>ul]:text-sm [&>ol]:text-xs sm:[&>ol]:text-sm">
+                    <ReactMarkdown>{msg.text}</ReactMarkdown>
+                  </div>
+                ) : (
+                  msg.text
+                )}
+              </div>
+            </div>
           ))}
+          {loading && (
+            <div className="flex justify-start">
+              <div className="bg-[#1e1e1e] border border-[#282828] rounded-lg px-2.5 py-1.5 text-gray-400 text-xs">
+                <div className="flex space-x-1">
+                  <span className="animate-bounce">●</span>
+                  <span
+                    className="animate-bounce"
+                    style={{ animationDelay: "0.1s" }}
+                  >
+                    ●
+                  </span>
+                  <span
+                    className="animate-bounce"
+                    style={{ animationDelay: "0.2s" }}
+                  >
+                    ●
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        <div className="p-2 sm:p-3 border-t border-[#282828]">
+          <div className="flex gap-1.5 sm:gap-2">
+            <input
+              type="text"
+              placeholder="Ask about expenses..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+              disabled={fetchingExpenses || expenses.length === 0}
+              className="flex-1 bg-[#1e1e1e] border border-[#282828] rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#26e07f] disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+            <button
+              onClick={handleSend}
+              disabled={
+                loading ||
+                !query.trim() ||
+                fetchingExpenses ||
+                expenses.length === 0
+              }
+              className="bg-[#26e07f] text-black px-2.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold hover:bg-[#2df08c] transition disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-3.5 h-3.5 sm:w-4 sm:h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default CalculatorWidget;
+}
