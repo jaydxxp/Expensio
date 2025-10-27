@@ -7,7 +7,7 @@ export default function Navbar() {
   return (
     <div className="w-full p-3 sm:p-6 flex flex-row justify-between items-center gap-2 sm:gap-6 flex-wrap">
       
-      {/* Logo Section */}
+   
       <div className="px-2 sm:px-6 flex justify-start">
         <Link to={"/"}>
           <div className="font-bold text-xl sm:text-2xl tracking-tight flex items-center">
@@ -19,7 +19,7 @@ export default function Navbar() {
         </Link>
       </div>
 
-      {/* Navigation Buttons */}
+      
       <div className="flex items-center gap-2 sm:gap-6 flex-wrap justify-end">
         <Link to={"/about"}>
           <button className="font-semibold text-white hover:text-gray-300 transition duration-200 text-sm sm:text-base">

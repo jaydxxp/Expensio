@@ -117,50 +117,52 @@ export default function Logbar() {
   };
 
   return (
-  <div className="w-full p-3 sm:p-6 flex flex-row justify-between items-center gap-2 sm:gap-6 overflow-x-auto">
-  {/* Logo Section */}
-  <div className="px-2 sm:px-6 flex justify-start items-center flex-shrink-0">
-    <Link to={"/"}>
-      <div className="font-bold text-lg sm:text-2xl tracking-tight flex items-center whitespace-nowrap">
-        <span className="text-white border-2 border-white px-1.5 sm:px-2 rounded mr-1">
-          E
+   <div className="w-full p-3 sm:p-6 flex items-center justify-between gap-2 sm:gap-6 overflow-x-auto no-scrollbar">
+    
+
+    <div className="flex-shrink-0 px-2 sm:px-6">
+      <Link to={"/"}>
+        <div className="font-bold text-lg sm:text-2xl tracking-tight flex items-center whitespace-nowrap">
+          <span className="text-white border-2 border-white px-1.5 sm:px-2 rounded mr-1">
+            E
+          </span>
+          <span className="text-white">xpensio</span>
+        </div>
+      </Link>
+    </div>
+
+
+    <div className="flex flex-nowrap items-center justify-end gap-2 sm:gap-5 overflow-x-auto no-scrollbar">
+      <Link to={"/dashboard"}>
+        <button className="font-semibold text-sm sm:text-base text-white hover:text-gray-300 transition duration-200 whitespace-nowrap">
+          Dashboard
+        </button>
+      </Link>
+
+      <Link to={"/allexpense"}>
+        <button className="font-semibold text-sm sm:text-base text-white hover:text-gray-300 transition duration-200 whitespace-nowrap">
+          History
+        </button>
+      </Link>
+
+      <button
+        onClick={() => setIsOpen(true)}
+        className="flex items-center gap-1 sm:gap-2 bg-[#1e1e1e] border border-[#282828] rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-white text-sm sm:text-base font-medium hover:bg-[#282828] transition whitespace-nowrap"
+      >
+        <span className="flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#26e07f] text-black font-bold text-xs sm:text-sm">
+          +
         </span>
-        <span className="text-white">xpensio</span>
-      </div>
-    </Link>
-  </div>
-
-  {/* Navigation Buttons */}
-  <div className="flex items-center justify-end gap-2 sm:gap-5 flex-nowrap overflow-x-auto">
-    <Link to={"/dashboard"}>
-      <button className="font-semibold text-sm sm:text-base text-white hover:text-gray-300 transition duration-200 whitespace-nowrap">
-        Dashboard
+        Add Expense
       </button>
-    </Link>
 
-    <Link to={"/allexpense"}>
-      <button className="font-semibold text-sm sm:text-base text-white hover:text-gray-300 transition duration-200 whitespace-nowrap">
-        History
+      <button
+        onClick={handleLogout}
+        className="px-3 sm:px-5 py-1 sm:py-2 rounded-full font-semibold text-sm sm:text-base bg-[#171717] border border-[#282828] text-white focus:ring-2 focus:ring-gray-500 hover:shadow-xl hover:scale-105 transition-all duration-200 whitespace-nowrap"
+      >
+        Logout
       </button>
-    </Link>
-
-    <button
-      onClick={() => setIsOpen(true)}
-      className="flex items-center gap-1 sm:gap-2 bg-[#1e1e1e] border border-[#282828] rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-white text-sm sm:text-base font-medium hover:bg-[#282828] transition whitespace-nowrap"
-    >
-      <span className="flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#26e07f] text-black font-bold text-xs sm:text-sm">
-        +
-      </span>
-      Add Expense
-    </button>
-
-    <button
-      onClick={handleLogout}
-      className="px-3 sm:px-5 py-1 sm:py-2 rounded-full font-semibold text-sm sm:text-base bg-[#171717] border border-[#282828] text-white focus:ring-2 focus:ring-gray-500 hover:shadow-xl hover:scale-105 transition-all duration-200 whitespace-nowrap"
-    >
-      Logout
-    </button>
-  </div>
+    </div>
+ 
 
 
 

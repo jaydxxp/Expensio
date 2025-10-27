@@ -261,7 +261,7 @@ export default function RecentExpense() {
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
           <h3 className="text-xl font-bold text-white">Recent Expenses</h3>
 
-          <div className="flex flex-wrap items-center gap-3 justify-end w-full md:w-auto">
+          <div className="flex flex-wrap items-center gap-3 justify-start w-full md:w-auto">
             <div className="relative">
               <input
                 type="text"
