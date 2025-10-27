@@ -24,10 +24,10 @@ export default function RecentExpense() {
   };
   const [expenses, setExpenses] = useState<Expense[]>([
     {
-      title: "Eat Repeat",
-      category: "Food",
-      date: "2025-10-27",
-      amount: 222,
+      title: "",
+      category: "",
+      date: "",
+      amount: 1,
       recurring: false,
     },
   ]);
