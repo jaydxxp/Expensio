@@ -1,6 +1,10 @@
 import  { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import axios from "axios";
+import UtilitiesRibbon from "./Utilities";
+import AIExpenseAssistant from "./AIAssistant";
+import CalculatorWidget from "./Calculator";
+import CurrencyWidget from "./CurrencyConvert";
 
 interface Expense {
   _id?: string;
@@ -14,6 +18,10 @@ interface Expense {
 
 export default function RecentExpense() {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeWidget, setActiveWidget] = useState<string | null>(null);
+  const handleWidgetToggle = (widgetName: string) => {
+    setActiveWidget((prev) => (prev === widgetName ? null : widgetName));
+  };
   const [expenses, setExpenses] = useState<Expense[]>([
     {
       title: "Eat Repeat",
@@ -385,6 +393,17 @@ export default function RecentExpense() {
           </div>
         )}
       </div>
+            <UtilitiesRibbon
+        onOpenAI={() => handleWidgetToggle("ai")} 
+        onOpenCalculator={() => handleWidgetToggle("calculator")} 
+        onOpenCurrency={() => handleWidgetToggle("currency")}
+        activeWidget={activeWidget}
+      />
+
+    
+      <AIExpenseAssistant isOpen={activeWidget === "ai"} />
+      <CalculatorWidget isOpen={activeWidget === "calculator"} />
+      <CurrencyWidget isOpen={activeWidget === "currency"} />
     </div>
   );
 }
