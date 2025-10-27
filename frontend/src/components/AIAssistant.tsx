@@ -40,7 +40,9 @@ export default function AIExpenseAssistant({ isOpen }: Props) {
       fetchExpenses();
     }
   }, [isOpen]);
+  
   const Backendurl = import.meta.env.VITE_BACKEND_URL;
+  
   const fetchExpenses = async () => {
     try {
       setFetchingExpenses(true);
@@ -132,8 +134,11 @@ export default function AIExpenseAssistant({ isOpen }: Props) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-20 right-5 flex flex-col items-end z-50">
-      <div className="w-96 h-[500px] rounded-lg bg-[#171717] border border-[#282828] shadow-xl transition-all duration-300 flex flex-col">
+    <div className="fixed inset-0 sm:inset-auto sm:bottom-20 sm:right-5 flex items-end sm:items-center justify-center sm:justify-end z-50 p-0 sm:p-4">
+
+      <div className="absolute inset-0 bg-black/60 sm:hidden" />
+      
+      <div className="relative w-full h-full sm:w-96 sm:h-[500px] rounded-t-2xl sm:rounded-lg bg-[#171717] border-t sm:border border-[#282828] shadow-xl transition-all duration-300 flex flex-col">
         <div className="px-4 py-3 border-b border-[#282828]">
           <h2 className="text-lg font-semibold text-white">
             Expense Assistant
@@ -169,14 +174,14 @@ export default function AIExpenseAssistant({ isOpen }: Props) {
               }`}
             >
               <div
-                className={`rounded-lg px-3 py-2 max-w-[85%] wrap-break-word text-sm ${
+                className={`rounded-lg px-3 py-2 max-w-[85%] break-words text-sm ${
                   msg.type === "user"
                     ? "bg-[#26e07f] text-black"
                     : "bg-[#1e1e1e] text-white border border-[#282828]"
                 }`}
               >
                 {msg.type === "ai" ? (
-                  <div className="prose prose-invert prose-sm max-w-none">
+                  <div className="prose prose-invert prose-sm max-w-none [&>*]:break-words">
                     <ReactMarkdown>{msg.text}</ReactMarkdown>
                   </div>
                 ) : (
@@ -209,7 +214,7 @@ export default function AIExpenseAssistant({ isOpen }: Props) {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="p-3 border-t border-[#282828]">
+        <div className="p-3 border-t border-[#282828] pb-safe">
           <div className="flex gap-2">
             <input
               type="text"
@@ -228,7 +233,7 @@ export default function AIExpenseAssistant({ isOpen }: Props) {
                 fetchingExpenses ||
                 expenses.length === 0
               }
-              className="bg-[#26e07f] text-black px-3 py-2 rounded-lg text-sm font-semibold hover:bg-[#2df08c] transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-[#26e07f] text-black px-3 py-2 rounded-lg text-sm font-semibold hover:bg-[#2df08c] transition disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
