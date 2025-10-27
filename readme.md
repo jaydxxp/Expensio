@@ -73,7 +73,7 @@ With AI insights, real-time currency conversion, and a cinematic dashboard, Expe
 - 🧱 TypeScript-based architecture (frontend & backend)
 - ✅ Zod validation for safer data handling
 - 🧩 Microservice-driven modular design
-- 🎬 “Wake-up” 3D dashboard animation
+
 - 🕸️ Subtle grid-line background pattern
 - 🧠 Built-in AI, charts, and tools — all in one dashboard
 
@@ -111,8 +111,8 @@ Let’s make personal finance management beautiful and insightful together.
 
 👨‍💻 **Author:** Jaydeep 
 📧 **Email:** jaydeepwaghaskar@gmail.com 
-🐙 **GitHub:** [@yourusername](https://github.com/jaydxxp)  
-🔗 **LinkedIn:** [Your LinkedIn Profile](https://linkedin.com/in/jaydeep-wagaskar-6a3049280)
+🐙 **GitHub:** [@jaydxxp](https://github.com/jaydxxp)  
+🔗 **LinkedIn:** [LinkedIn Profile](https://linkedin.com/in/jaydeep-wagaskar-6a3049280)
 
 ---
 
