@@ -134,35 +134,32 @@ export default function AIExpenseAssistant({ isOpen }: Props) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 sm:inset-auto sm:bottom-20 sm:right-5 flex items-end sm:items-center justify-center sm:justify-end z-50 p-0 sm:p-4">
-
-      <div className="absolute inset-0 bg-black/60 sm:hidden" />
-      
-      <div className="relative w-full h-full sm:w-96 sm:h-[500px] rounded-t-2xl sm:rounded-lg bg-[#171717] border-t sm:border border-[#282828] shadow-xl transition-all duration-300 flex flex-col">
-        <div className="px-4 py-3 border-b border-[#282828]">
-          <h2 className="text-lg font-semibold text-white">
+    <div className="fixed bottom-16 sm:bottom-20 right-3 sm:right-5 flex flex-col items-end z-50">
+      <div className="w-[280px] sm:w-80 h-[350px] sm:h-[450px] rounded-lg bg-[#171717] border border-[#282828] shadow-xl transition-all duration-300 flex flex-col">
+        <div className="px-3 py-2 border-b border-[#282828]">
+          <h2 className="text-sm sm:text-base font-semibold text-white">
             Expense Assistant
           </h2>
-          <p className="text-xs text-gray-400">
+          <p className="text-[10px] sm:text-xs text-gray-400">
             {fetchingExpenses
-              ? "Loading your expenses..."
+              ? "Loading expenses..."
               : expenses.length > 0
               ? `Analyzing ${expenses.length} expenses`
               : "No expenses found"}
           </p>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        <div className="flex-1 overflow-y-auto p-2.5 sm:p-3 space-y-2">
           {messages.length === 0 && !fetchingExpenses && (
-            <div className="text-center text-gray-500 text-sm mt-8">
+            <div className="text-center text-gray-500 text-xs sm:text-sm mt-6">
               <p>👋 Hi! I'm your expense assistant.</p>
-              <p className="mt-2">Ask me anything about your expenses!</p>
+              <p className="mt-1.5">Ask me about your expenses!</p>
             </div>
           )}
 
           {fetchingExpenses && (
             <div className="flex justify-center items-center h-full">
-              <div className="text-gray-400 text-sm">Loading expenses...</div>
+              <div className="text-gray-400 text-xs">Loading expenses...</div>
             </div>
           )}
 
@@ -174,14 +171,14 @@ export default function AIExpenseAssistant({ isOpen }: Props) {
               }`}
             >
               <div
-                className={`rounded-lg px-3 py-2 max-w-[85%] break-words text-sm ${
+                className={`rounded-lg px-2 py-1.5 max-w-[85%] break-words text-xs sm:text-sm ${
                   msg.type === "user"
                     ? "bg-[#26e07f] text-black"
                     : "bg-[#1e1e1e] text-white border border-[#282828]"
                 }`}
               >
                 {msg.type === "ai" ? (
-                  <div className="prose prose-invert prose-sm max-w-none [&>*]:break-words">
+                  <div className="prose prose-invert prose-sm max-w-none [&>*]:break-words [&>*]:text-[11px] sm:[&>*]:text-xs [&>h1]:text-xs [&>h2]:text-[11px] [&>h3]:text-[10px] [&>p]:text-[11px] sm:[&>p]:text-xs [&>ul]:text-[11px] sm:[&>ul]:text-xs [&>ol]:text-[11px] sm:[&>ol]:text-xs [&>ul]:pl-3 [&>ol]:pl-3">
                     <ReactMarkdown>{msg.text}</ReactMarkdown>
                   </div>
                 ) : (
@@ -192,17 +189,17 @@ export default function AIExpenseAssistant({ isOpen }: Props) {
           ))}
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-[#1e1e1e] border border-[#282828] rounded-lg px-3 py-2 text-gray-400 text-sm">
+              <div className="bg-[#1e1e1e] border border-[#282828] rounded-lg px-2 py-1.5 text-gray-400 text-xs">
                 <div className="flex space-x-1">
-                  <span className="animate-bounce">●</span>
+                  <span className="animate-bounce text-[10px]">●</span>
                   <span
-                    className="animate-bounce"
+                    className="animate-bounce text-[10px]"
                     style={{ animationDelay: "0.1s" }}
                   >
                     ●
                   </span>
                   <span
-                    className="animate-bounce"
+                    className="animate-bounce text-[10px]"
                     style={{ animationDelay: "0.2s" }}
                   >
                     ●
@@ -214,16 +211,16 @@ export default function AIExpenseAssistant({ isOpen }: Props) {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="p-3 border-t border-[#282828] pb-safe">
-          <div className="flex gap-2">
+        <div className="p-2 sm:p-2.5 border-t border-[#282828]">
+          <div className="flex gap-1.5">
             <input
               type="text"
-              placeholder="Ask about your expenses..."
+              placeholder="Ask about expenses..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={fetchingExpenses || expenses.length === 0}
-              className="flex-1 bg-[#1e1e1e] border border-[#282828] rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#26e07f] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 bg-[#1e1e1e] border border-[#282828] rounded-lg px-2 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#26e07f] disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <button
               onClick={handleSend}
@@ -233,7 +230,7 @@ export default function AIExpenseAssistant({ isOpen }: Props) {
                 fetchingExpenses ||
                 expenses.length === 0
               }
-              className="bg-[#26e07f] text-black px-3 py-2 rounded-lg text-sm font-semibold hover:bg-[#2df08c] transition disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+              className="bg-[#26e07f] text-black px-2 py-1.5 rounded-lg text-xs font-semibold hover:bg-[#2df08c] transition disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -241,7 +238,7 @@ export default function AIExpenseAssistant({ isOpen }: Props) {
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="w-4 h-4"
+                className="w-3.5 h-3.5"
               >
                 <path
                   strokeLinecap="round"
