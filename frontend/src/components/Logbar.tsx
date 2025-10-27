@@ -117,131 +117,140 @@ export default function Logbar() {
   };
 
   return (
-    <div className="flex justify-between items-center p-8">
-      <div className="px-6 py-2">
-        <Link to={"/"}>
-          <div className="font-bold text-2xl tracking-tight flex">
-            <span className="text-white border-2 border-white px-2 rounded mr-1">
-              E
-            </span>
-            <span className="text-white">xpensio</span>
+  <div className="w-full p-3 sm:p-6 flex flex-row justify-between items-center gap-2 sm:gap-6 overflow-x-auto">
+  {/* Logo Section */}
+  <div className="px-2 sm:px-6 flex justify-start items-center flex-shrink-0">
+    <Link to={"/"}>
+      <div className="font-bold text-lg sm:text-2xl tracking-tight flex items-center whitespace-nowrap">
+        <span className="text-white border-2 border-white px-1.5 sm:px-2 rounded mr-1">
+          E
+        </span>
+        <span className="text-white">xpensio</span>
+      </div>
+    </Link>
+  </div>
+
+  {/* Navigation Buttons */}
+  <div className="flex items-center justify-end gap-2 sm:gap-5 flex-nowrap overflow-x-auto">
+    <Link to={"/dashboard"}>
+      <button className="font-semibold text-sm sm:text-base text-white hover:text-gray-300 transition duration-200 whitespace-nowrap">
+        Dashboard
+      </button>
+    </Link>
+
+    <Link to={"/allexpense"}>
+      <button className="font-semibold text-sm sm:text-base text-white hover:text-gray-300 transition duration-200 whitespace-nowrap">
+        History
+      </button>
+    </Link>
+
+    <button
+      onClick={() => setIsOpen(true)}
+      className="flex items-center gap-1 sm:gap-2 bg-[#1e1e1e] border border-[#282828] rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-white text-sm sm:text-base font-medium hover:bg-[#282828] transition whitespace-nowrap"
+    >
+      <span className="flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#26e07f] text-black font-bold text-xs sm:text-sm">
+        +
+      </span>
+      Add Expense
+    </button>
+
+    <button
+      onClick={handleLogout}
+      className="px-3 sm:px-5 py-1 sm:py-2 rounded-full font-semibold text-sm sm:text-base bg-[#171717] border border-[#282828] text-white focus:ring-2 focus:ring-gray-500 hover:shadow-xl hover:scale-105 transition-all duration-200 whitespace-nowrap"
+    >
+      Logout
+    </button>
+  </div>
+
+
+
+   
+    {isOpen && (
+      <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+        <div className="bg-[#171717] border border-[#282828] rounded-2xl p-6 w-[90%] max-w-md">
+          <h3 className="text-lg font-semibold text-white mb-4">
+            Add New Expense
+          </h3>
+
+          <div className="flex flex-col gap-4">
+            <input
+              type="text"
+              placeholder="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="bg-transparent border border-[#282828] rounded p-2 text-white placeholder-gray-500 focus:outline-none"
+            />
+
+            {allCategories.length > 0 ? (
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="bg-transparent border border-[#282828] rounded p-2 text-white focus:outline-none"
+              >
+                <option value="">Select category</option>
+                {allCategories.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type="text"
+                placeholder="Category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="bg-transparent border border-[#282828] rounded p-2 text-white placeholder-gray-500 focus:outline-none"
+              />
+            )}
+
+            <input
+              type="number"
+              placeholder="Amount"
+              value={amount === "" ? "" : amount}
+              onChange={(e) =>
+                setAmount(e.target.value === "" ? "" : Number(e.target.value))
+              }
+              className="bg-transparent border border-[#282828] rounded p-2 text-white placeholder-gray-500 focus:outline-none"
+            />
+
+            <input
+              type="text"
+              placeholder="Notes (optional)"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="bg-transparent border border-[#282828] rounded p-2 text-white placeholder-gray-500 focus:outline-none"
+            />
+
+            <label className="flex items-center gap-2 text-gray-300">
+              <input
+                type="checkbox"
+                checked={recurring}
+                onChange={(e) => setRecurring(e.target.checked)}
+                className="accent-[#26e07f]"
+              />
+              Recurring expense
+            </label>
           </div>
-        </Link>
-      </div>
 
-      <div className="flex gap-6 items-center">
-        <Link to={"/dashboard"}>
-          <button className="font-semibold text-white hover:text-gray-300 transition duration-200">
-            Dashboard
-          </button>
-        </Link>
-
-        <Link to={"/allexpense"}>
-          <button className="font-semibold text-white hover:text-gray-300 transition duration-200">
-            History
-          </button>
-        </Link>
-
-        <button
-          onClick={() => setIsOpen(true)}
-          className="flex items-center gap-2 bg-[#1e1e1e] border border-[#282828] rounded-lg px-3 py-1.5 text-white text-sm font-medium hover:bg-[#282828] transition"
-        >
-          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#26e07f] text-black font-bold text-sm">
-            +
-          </span>
-          Add Expense
-        </button>
-
-        <button
-          onClick={handleLogout}
-          className="px-5 py-2 rounded-full font-semibold bg-[#171717] border border-[#282828] text-white focus:ring-2 focus:ring-gray-500 hover:shadow-xl hover:scale-105 transition-all duration-200"
-        >
-          Logout
-        </button>
-      </div>
-
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-[#171717] border border-[#282828] rounded-2xl p-6 w-[90%] max-w-md">
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Add New Expense
-            </h3>
-            <div className="flex flex-col gap-4">
-              <input
-                type="text"
-                placeholder="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="bg-transparent border border-[#282828] rounded p-2 text-white placeholder-gray-500 focus:outline-none"
-              />
-
-              {allCategories.length > 0 ? (
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="bg-transparent border border-[#282828] rounded p-2 text-white focus:outline-none"
-                >
-                  <option value="">Select category</option>
-                  {allCategories.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  type="text"
-                  placeholder="Category"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="bg-transparent border border-[#282828] rounded p-2 text-white placeholder-gray-500 focus:outline-none"
-                />
-              )}
-
-              <input
-                type="number"
-                placeholder="Amount"
-                value={amount === "" ? "" : amount}
-                onChange={(e) =>
-                  setAmount(e.target.value === "" ? "" : Number(e.target.value))
-                }
-                className="bg-transparent border border-[#282828] rounded p-2 text-white placeholder-gray-500 focus:outline-none"
-              />
-              <input
-                type="text"
-                placeholder="Notes (optional)"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                className="bg-transparent border border-[#282828] rounded p-2 text-white placeholder-gray-500 focus:outline-none"
-              />
-              <label className="flex items-center gap-2 text-gray-300">
-                <input
-                  type="checkbox"
-                  checked={recurring}
-                  onChange={(e) => setRecurring(e.target.checked)}
-                  className="accent-[#26e07f]"
-                />
-                Recurring expense
-              </label>
-            </div>
-
-            <div className="flex justify-end mt-6 gap-3">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="px-4 py-2 rounded-lg bg-[#1e1e1e] hover:bg-[#282828] text-gray-300 transition"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAddExpense}
-                className="px-4 py-2 rounded-lg bg-[#26e07f] text-black font-semibold hover:bg-[#2df08c] transition"
-              >
-                Add
-              </button>
-            </div>
+          <div className="flex justify-end mt-6 gap-3">
+            <button
+              onClick={() => setIsOpen(false)}
+              className="px-4 py-2 rounded-lg bg-[#1e1e1e] hover:bg-[#282828] text-gray-300 transition"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleAddExpense}
+              className="px-4 py-2 rounded-lg bg-[#26e07f] text-black font-semibold hover:bg-[#2df08c] transition"
+            >
+              Add
+            </button>
           </div>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    )}
+  </div>
+);
+
 }

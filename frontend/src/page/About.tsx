@@ -5,8 +5,8 @@ export default function AboutUs() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <div className="flex flex-col items-center justify-center flex-1 px-6 py-8 pb-35">
-        <div className="max-w-3xl text-center mb-12">
-          <h2 className="text-6xl font-bold text-white mb-6">About Us</h2>
+        <div className="max-w-3xl text-center mb-12 ">
+          <h2 className="text-3xl sm:text-6xl font-bold text-white mb-6 ">About Us</h2>
           <div className="bg-[#171717] border border-[#282828] rounded-3xl p-8">
             <p className="text-lg text-gray-300 leading-relaxed">
               Expensio is your trusted companion for managing finances
