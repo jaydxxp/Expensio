@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface Signininput {
   email?: string;
@@ -100,9 +100,10 @@ export default function SigninComponent() {
             </button>
           </div>
         </form>
-
+        
         <p className="mt-10 text-center text-sm/6 text-gray-400">
           Not registered yet?
+          <Link to={"/signup"} >
           <a
             href="/signup"
             className="font-semibold text-gray-200 hover:text-white transition duration-200"
@@ -110,7 +111,9 @@ export default function SigninComponent() {
             {" "}
             Signup
           </a>
+          </Link>
         </p>
+ 
       </div>
     </div>
   );
