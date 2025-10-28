@@ -16,6 +16,7 @@ export default async function AuthMiddleware(req:Request,res:Response,next:NextF
 {
     try {
     const authHeader = req.headers.authorization || "";
+
     if (!authHeader) {
       return res.status(401).json({ error: "No token provided" });
     }
@@ -31,7 +32,7 @@ export default async function AuthMiddleware(req:Request,res:Response,next:NextF
     const decoded: any = jwt.verify(token, process.env.JWTSecret!);
 
 
-    const userId = decoded?.userId ?? decoded?.userId;
+    const userId = decoded?.userid ?? decoded?.userId;
     if (!userId) {
       return res.status(401).json({ error: "Invalid token payload" });
     }

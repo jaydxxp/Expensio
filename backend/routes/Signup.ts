@@ -36,9 +36,9 @@ router.post("/signup",async (req:Request,res:Response)=>{
         email:req.body.email
 
     })
-    const userId=user._id;
+    const userid=user._id;
     const token=jwt.sign({
-        userId
+        userid
     },process.env.JWTSecret!);
     return res.json({
         message:"Account Created Successfully",user,token

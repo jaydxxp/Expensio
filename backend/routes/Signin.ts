@@ -29,7 +29,7 @@ router.post("/signin",async (req:Request,res:Response)=>{
         })
     }
      const token=jwt.sign({
-            userId:user._id
+            userid:user._id
         },process.env.JWTSecret!)
     
     return res.json({
