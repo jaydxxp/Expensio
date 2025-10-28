@@ -33,7 +33,7 @@ router.post("/signin",async (req:Request,res:Response)=>{
         },process.env.JWTSecret!)
     
     return res.json({
-        message:"Logged in Successfully",user,token:`Bearer ${token}`
+        message:"Logged in Successfully",user,token
     })
 })
 export default router;
