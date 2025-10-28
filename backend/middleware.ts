@@ -31,7 +31,7 @@ export default async function AuthMiddleware(req:Request,res:Response,next:NextF
     const decoded: any = jwt.verify(token, process.env.JWTSecret!);
 
 
-    const userId = decoded?.userid ?? decoded?.userId;
+    const userId = decoded?.userId ?? decoded?.userId;
     if (!userId) {
       return res.status(401).json({ error: "Invalid token payload" });
     }
