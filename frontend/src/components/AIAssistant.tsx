@@ -84,7 +84,7 @@ export default function AIExpenseAssistant({ isOpen }: Props) {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: ` ${token}`,
             "Content-Type": "application/json",
           },
         }
